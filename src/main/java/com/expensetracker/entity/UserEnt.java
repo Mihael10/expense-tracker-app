@@ -1,15 +1,21 @@
 package com.expensetracker.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.hibernate.sql.InFragment.NOT_NULL;
 
 @ToString
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 @Entity
 @Getter
 @Setter
@@ -20,6 +26,10 @@ public class UserEnt {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int user_id;
 
+    @JsonIgnore
+    @OneToMany
+    private Set<TransactionEnt> userTransactions = new HashSet<>();
+
     @Column(name = "username", nullable = false, unique = true)
     private String username;
 
@@ -28,43 +38,7 @@ public class UserEnt {
 
     @Column(name = "password", nullable = false)
     private String password;
-    
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<RoleEnt> roles = new ArrayList<>();
-
-    @OneToMany(fetch = FetchType.LAZY)
-    private Collection<TransactionEnt> transactions = new ArrayList<>();
 
 
-    public int getUser_id() {
-        return user_id;
-    }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

@@ -1,8 +1,12 @@
 package com.expensetracker.service;
 
 
+import com.expensetracker.entity.UserEnt;
+
+import java.time.LocalDate;
+
 public interface TransactionService {
 
-void showTransactions(String username, int transaction_no,
-                      String description, int amount_expense, String category);
+void showTransaction(UserEnt user);
+
 }

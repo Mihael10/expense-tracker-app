@@ -7,6 +7,8 @@ import lombok.*;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -30,12 +32,19 @@ public class UserEnt {
     @OneToMany
     private Set<TransactionEnt> userTransactions = new HashSet<>();
 
+    @Column(name = "full_name")
+    private String full_name;
+    
+    @NotNull
     @Column(name = "username", nullable = false, unique = true)
     private String username;
 
+    @NotNull
     @Column(name = "email", nullable = false)
     private String email;
 
+    @NotNull
+    @Size(min=8)
     @Column(name = "password", nullable = false)
     private String password;
 

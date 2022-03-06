@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserEnt saveUser(UserEnt user) {
-        log.info("Saving new user");
+        log.info("Saving new user: {}" + user);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepo.save(user);
     }

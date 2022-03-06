@@ -9,8 +9,10 @@ import lombok.*;
 import javax.persistence.*;
 import java.math.BigInteger;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 @ToString
 @RequiredArgsConstructor
@@ -26,13 +28,13 @@ public class TransactionEnt {
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     @Column(name = "date")
-    private LocalDate date;
+    private Date date;
 
     @Column(name = "category")
     private String category;
 
     @Column(name = "amount_expense")
-    private int amount_expense;
+    private double amount_expense;
     
     @Column(name  = "description")
     private String description;

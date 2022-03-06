@@ -30,19 +30,16 @@ public class TransactionsController {
     }
     @PostMapping("/new/transaction")
     public TransactionEnt newTransaction (@RequestBody TransactionEnt transactionEnt) {
-
-        TransactionEnt newTransaction = transactionsRepo.save(new TransactionEnt());
-
-        return newTransaction;
+        return transactionsService.saveTransaction(transactionEnt);
     }
 
 
    @PutMapping("/{user_id}/transactions/{transaction_no}")
     UserEnt showTransactions(@PathVariable int user_id,
                                     @PathVariable int transaction_no){
-        UserEnt user = userRepo.getOne(user_id);
-        TransactionService transaction = (TransactionService) transactionsRepo.getOne(transaction_no);
-        transaction.showTransaction(user);
+        UserEnt user = userRepo.findById(user_id).get(user_id);
+        TransactionsRepo transaction = (TransactionsRepo) transactionsRepo.findById(transaction_no).get(transaction_no);
+
         return userRepo.save(user);
    }
 

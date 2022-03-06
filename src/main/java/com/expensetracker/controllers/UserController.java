@@ -33,7 +33,7 @@ public class UserController {
 
     @GetMapping("/get/{user_id}")
     public UserEnt getUserById(@PathVariable(value = "user_id") int user_id) {
-        UserEnt userEnt = userRepo.findById(user_id).get();
+        UserEnt userEnt = userRepo.findById(user_id).get(user_id);
 
         return userEnt;
     }
@@ -49,8 +49,9 @@ public class UserController {
     @PutMapping("/update/{user_id}")
     public ResponseEntity<UserEnt> updateUser(@PathVariable(value = "user_id") int user_id,
                                               @RequestBody UserEnt userEnt) {
-        UserEnt user = userRepo.findById(user_id).get();
+        UserEnt user = userRepo.findById(user_id).get(user_id);
 
+        user.setFull_name(user.getFull_name());
         user.setUsername(user.getUsername());
         user.setEmail(user.getEmail());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -61,7 +62,7 @@ public class UserController {
 
     @DeleteMapping("/delete/{user_id}")
     public Map<String, Boolean> deleteUser(@PathVariable(value = "user_id") int user_id) {
-        UserEnt user = userRepo.findById(user_id).get();
+        UserEnt user = userRepo.findById(user_id).get(user_id);
 
         userRepo.delete(user);
         Map<String, Boolean> response = new HashMap<>();

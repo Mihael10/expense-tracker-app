@@ -1,5 +1,6 @@
 package com.expensetracker.service;
 
+import com.expensetracker.DTO.UserTransactionDto;
 import com.expensetracker.entity.UserEnt;
 import com.expensetracker.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service @RequiredArgsConstructor @Slf4j @Transactional
 public class UserServiceImpl implements UserService, UserDetailsService {
@@ -36,17 +38,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
 
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEnt user = userRepo.findByUsername(username);
-        if(user == null){
+        if (user == null) {
             log.error("Username not found!");
-                throw new UsernameNotFoundException("Username not found");
-        }else{
+            throw new UsernameNotFoundException("Username not found");
+        } else {
             log.info("User found {}", username);
         }
         user.setUsername(username);
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), new ArrayList<>());
     }
+
+
 }

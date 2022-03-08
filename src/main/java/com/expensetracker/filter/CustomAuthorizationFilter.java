@@ -28,13 +28,17 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+
         if(request.getServletPath().equals("/api/login")){
             filterChain.doFilter(request, response);
+
         }else{
+
             String authorizationHeader = request.getHeader(AUTHORIZATION);
             if(authorizationHeader!=null && authorizationHeader.startsWith("Bearer ")){
 
                 try{
+
                     String token = authorizationHeader.substring("Bearer ".length());
                     Algorithm algorithm = Algorithm.HMAC256("securitySecret".getBytes());
                     JWTVerifier verifier = JWT.require(algorithm).build();
@@ -45,7 +49,9 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                             new UsernamePasswordAuthenticationToken(username, null);
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     filterChain.doFilter(request, response);
+
                 }catch(Exception ex){
+
                     log.error("Error logging in: {}", ex.getMessage());
                     response.setHeader("Something went wrong", ex.getMessage());
                     //response.sendError(FORBIDDEN.value());

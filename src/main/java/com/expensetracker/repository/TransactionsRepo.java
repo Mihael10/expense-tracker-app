@@ -11,5 +11,5 @@ import java.util.List;
 @Repository
 public interface TransactionsRepo extends JpaRepository<TransactionEnt, Integer> {
 
-List<TransactionEnt> findById(int transaction_no);
+TransactionEnt findById(int transaction_no);
 }

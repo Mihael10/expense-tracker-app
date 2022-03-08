@@ -2,20 +2,23 @@ package com.expensetracker.controllers;
 
 
 
+import com.expensetracker.DTO.UserTransactionDto;
 import com.expensetracker.entity.UserEnt;
 
 import com.expensetracker.repository.UserRepo;
 import com.expensetracker.service.UserService;
+
+
 import lombok.RequiredArgsConstructor;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 @RequiredArgsConstructor
@@ -30,11 +33,10 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
 
 
-
     @GetMapping("/get/{user_id}")
     public UserEnt getUserById(@PathVariable(value = "user_id") int user_id) {
-        UserEnt userEnt = userRepo.findById(user_id).get(user_id);
-
+        UserEnt userEnt = userRepo.findById(user_id).orElseThrow(IllegalArgumentException::new);
+        userService.getUser(userEnt.getUsername());
         return userEnt;
     }
 
@@ -49,7 +51,7 @@ public class UserController {
     @PutMapping("/update/{user_id}")
     public ResponseEntity<UserEnt> updateUser(@PathVariable(value = "user_id") int user_id,
                                               @RequestBody UserEnt userEnt) {
-        UserEnt user = userRepo.findById(user_id).get(user_id);
+        UserEnt user = userRepo.findById(user_id).get();
 
         user.setFull_name(user.getFull_name());
         user.setUsername(user.getUsername());
@@ -62,7 +64,7 @@ public class UserController {
 
     @DeleteMapping("/delete/{user_id}")
     public Map<String, Boolean> deleteUser(@PathVariable(value = "user_id") int user_id) {
-        UserEnt user = userRepo.findById(user_id).get(user_id);
+        UserEnt user = userRepo.findById(user_id).get();
 
         userRepo.delete(user);
         Map<String, Boolean> response = new HashMap<>();
@@ -70,5 +72,25 @@ public class UserController {
         return response;
     }
 
+    @GetMapping("/{user_id}-transactions")
+    public ResponseEntity<UserTransactionDto> getAllUserTransactions(@PathVariable(value = "user_id")
+                                                                     int user_id) {
+        UserEnt user = userRepo.getById(user_id);
+        ModelMapper modelMapper = new ModelMapper();
 
+        // convert entity to DTO
+        UserTransactionDto userResponse = modelMapper.map(user, UserTransactionDto.class);
+        userResponse.setCategory(userResponse.getCategory());
+        userResponse.setDescription(userResponse.getDescription());
+        userResponse.setAmount_expense(userResponse.getAmount_expense());
+        userResponse.setUsername(userResponse.getUsername());
+        userResponse.setDate(userResponse.getDate());
+        return  ResponseEntity.ok().body(userResponse);
+    }
 }
+
+
+
+
+
+

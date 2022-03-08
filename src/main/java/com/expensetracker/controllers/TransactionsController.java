@@ -1,6 +1,7 @@
 package com.expensetracker.controllers;
 
 
+import com.expensetracker.DTO.UserTransactionDto;
 import com.expensetracker.entity.TransactionEnt;
 
 import com.expensetracker.entity.UserEnt;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -34,13 +36,7 @@ public class TransactionsController {
     }
 
 
-   @PutMapping("/{user_id}/transactions/{transaction_no}")
-    UserEnt showTransactions(@PathVariable int user_id,
-                                    @PathVariable int transaction_no){
-        UserEnt user = userRepo.findById(user_id).get(user_id);
-        TransactionsRepo transaction = (TransactionsRepo) transactionsRepo.findById(transaction_no).get(transaction_no);
 
-        return userRepo.save(user);
    }
 
-}
+

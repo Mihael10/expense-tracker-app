@@ -8,29 +8,30 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
-
+import java.util.List;
 
 
 @Transactional @Slf4j @RequiredArgsConstructor @Service
-public class TransactionServiceImpl implements TransactionService{
+public class TransactionServiceImpl implements TransactionService {
 
     private final UserRepo userRepo;
     private final TransactionsRepo transactionsRepo;
-    private UserEnt userEnt;
-
-
 
 
     @Override
-    public TransactionEnt saveTransaction(TransactionEnt transaction) {
-        TransactionEnt transactionEnt = new TransactionEnt();
+    public TransactionEnt saveTransaction(@RequestBody TransactionEnt transaction) {
 
-        transactionEnt.setDescription(transactionEnt.getDescription());
-        transactionEnt.setDate(transaction.getDate());
-        transactionEnt.setAmount_expense(transaction.getAmount_expense());
-        transactionEnt.setCategory(transaction.getCategory());
+        //TransactionEnt transactionEnt = new TransactionEnt();
 
-        return transactionsRepo.save(transactionEnt);
+        transaction.setDescription(transaction.getDescription());
+        transaction.setDate(transaction.getDate());
+        transaction.setAmount_expense(transaction.getAmount_expense());
+        transaction.setCategory(transaction.getCategory());
+
+        return transactionsRepo.save(transaction);
     }
+
 }
+

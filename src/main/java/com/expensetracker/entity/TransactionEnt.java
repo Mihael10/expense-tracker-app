@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @ToString
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ import java.util.Date;
 @Setter
 @Entity
 @Table(name = "transactions")
-public class TransactionEnt {
+public class TransactionEnt  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -40,9 +41,7 @@ public class TransactionEnt {
     private String description;
 
 
-    @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    private UserEnt userEnt;
+
+
 
 }

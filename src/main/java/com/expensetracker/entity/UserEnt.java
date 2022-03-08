@@ -28,8 +28,10 @@ public class UserEnt {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int user_id;
 
+
+
     @JsonIgnore
-    @OneToMany
+    @OneToMany(fetch=FetchType.EAGER, targetEntity = TransactionEnt.class)
     private Set<TransactionEnt> userTransactions = new HashSet<>();
 
     @Column(name = "full_name")

@@ -11,7 +11,6 @@ import com.expensetracker.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +27,6 @@ public class UserController {
 
 
     private final UserRepo userRepo;
-
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
@@ -49,18 +47,21 @@ public class UserController {
 
 
     @PutMapping("/update/{user_id}")
-    public ResponseEntity<UserEnt> updateUser(@PathVariable(value = "user_id") int user_id,
+    public ResponseEntity<UserEnt> updateUser(@PathVariable int user_id,
                                               @RequestBody UserEnt userEnt) {
-        UserEnt user = userRepo.findById(user_id).get();
 
-        user.setFull_name(user.getFull_name());
-        user.setUsername(user.getUsername());
-        user.setEmail(user.getEmail());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+             userRepo.findById(user_id)
+                    .map(user -> {
+                        user.setFull_name(userEnt.getFull_name());
+                        user.setUsername(userEnt.getUsername());
+                        user.setEmail(userEnt.getEmail());
+                        user.setPassword(passwordEncoder.encode(user.getPassword()));
+                        return userRepo.save(user);
+                    });
 
-        final UserEnt updatedUser = userRepo.save(user);
-        return ResponseEntity.ok(updatedUser);
-    }
+                        return ResponseEntity.ok(userEnt);
+        }
+
 
     @DeleteMapping("/delete/{user_id}")
     public Map<String, Boolean> deleteUser(@PathVariable(value = "user_id") int user_id) {
@@ -72,21 +73,14 @@ public class UserController {
         return response;
     }
 
-    @GetMapping("/{user_id}-transactions")
-    public ResponseEntity<UserTransactionDto> getAllUserTransactions(@PathVariable(value = "user_id")
-                                                                     int user_id) {
-        UserEnt user = userRepo.getById(user_id);
-        ModelMapper modelMapper = new ModelMapper();
-
-        // convert entity to DTO
-        UserTransactionDto userResponse = modelMapper.map(user, UserTransactionDto.class);
-        userResponse.setCategory(userResponse.getCategory());
-        userResponse.setDescription(userResponse.getDescription());
-        userResponse.setAmount_expense(userResponse.getAmount_expense());
-        userResponse.setUsername(userResponse.getUsername());
-        userResponse.setDate(userResponse.getDate());
-        return  ResponseEntity.ok().body(userResponse);
+    @GetMapping("/{username}transaction")
+    @ResponseBody
+    public List<UserTransactionDto> getAllUserTransactions(@PathVariable(value = "username")int  user_id,String username){
+        UserEnt findUser = userRepo.findById(user_id).get();
+        var userTransaction = userService.getTransactionsByUser(Integer.parseInt(username));
+        return (List<UserTransactionDto>) userTransaction;
     }
+
 }
 
 

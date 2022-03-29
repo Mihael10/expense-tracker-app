@@ -16,7 +16,7 @@ import java.util.List;
 @Transactional @Slf4j @RequiredArgsConstructor @Service
 public class TransactionServiceImpl implements TransactionService {
 
-    private final UserRepo userRepo;
+
     private final TransactionsRepo transactionsRepo;
 
 
@@ -29,7 +29,7 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setDate(transaction.getDate());
         transaction.setAmount_expense(transaction.getAmount_expense());
         transaction.setCategory(transaction.getCategory());
-
+        log.info("Saving transaction..{} " + transaction);
         return transactionsRepo.save(transaction);
     }
 

@@ -12,10 +12,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import static org.springframework.http.HttpMethod.GET;
 
-
+//@CrossOrigin("http://localhost:3000")
 @EnableWebSecurity @Configuration @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -33,6 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
                 CustomAuthenticationFilter authenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
                 authenticationFilter.setFilterProcessesUrl("/api/login");
+                //http.cors();
                 http.csrf().disable();
                 http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 http.authorizeRequests().antMatchers("/api/login/**").permitAll();

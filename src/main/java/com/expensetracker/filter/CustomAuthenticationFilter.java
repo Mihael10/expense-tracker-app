@@ -42,8 +42,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         return authenticationManager.authenticate(authenticationToken);
     }
 
-    //We can Override the method unsuccessfulAuthentication too, and we can make if the user tries to log in unsuccessfully
-    //like in 5-minute period to block that account
+
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request,
@@ -56,18 +55,24 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         Algorithm algorithm = Algorithm.HMAC256("securitySecret".getBytes());
 
         String access_token = JWT.create().withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))//10h
                 .withIssuer(request.getRequestURI().toString())
-                .withClaim("roles", user.getAuthorities()
+                .withClaim("username", user.getAuthorities()
                         .stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);
 
+        //create token and get the username that it creates for
         String refresh_token = JWT.create().withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 1000))
+                //set expiration of the token in milliseconds
+                .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                //get
                 .withIssuer(request.getRequestURI().toString())
+                //sign it with the key provided in this case securityKey
                 .sign(algorithm);
               /*response.setHeader("access_token", access_token);
               response.setHeader("refresh_token", refresh_token);*/ //only 200 ok returns, you can't see payload
+
+            //get the name and the value of the token and display it
             Map<String, String> tokens = new HashMap<>();
             tokens.put("access_token", access_token);
             tokens.put("refresh_token", refresh_token);

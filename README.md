@@ -1,5 +1,7 @@
 # Expense-Tracker-App
 
+# Project Status: Finished
+
 # Description
 
 Back-end for expense tracker web app with implementation of Spring Security and Database.

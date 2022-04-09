@@ -2,16 +2,15 @@ package com.expensetracker.service;
 
 
 import com.expensetracker.entity.TransactionEnt;
-import com.expensetracker.entity.UserEnt;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import java.time.LocalDate;
+import javax.websocket.server.PathParam;
+
 
 public interface TransactionService {
 
 
- TransactionEnt saveTransaction(TransactionEnt transaction);
 
-
-
+ TransactionEnt saveTransaction(@RequestBody TransactionEnt transaction,
+                                @PathParam(value = "username") String username);
 }

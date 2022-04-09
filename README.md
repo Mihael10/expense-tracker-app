@@ -14,7 +14,8 @@ The user can add new transaction and see transaction history.
 1. Intellij
 2. Spring Framework
 3. Postman
-4. PostgresSQL
+4. Docker
+5. PostgresSQL
 
 # Spring Security
 

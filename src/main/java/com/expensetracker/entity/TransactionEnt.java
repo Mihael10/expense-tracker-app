@@ -1,8 +1,10 @@
 package com.expensetracker.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.*;
 
 import javax.persistence.*;
@@ -35,7 +37,11 @@ public class TransactionEnt  {
     @Column(name  = "description")
     private String description;
 
-
+   @ManyToOne(fetch = FetchType.EAGER)
+    @JsonDeserialize
+    @JsonBackReference
+    @JoinColumn(name = "user_id")
+    private UserEnt userEnt;
 
 
 

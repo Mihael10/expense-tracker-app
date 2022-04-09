@@ -1,0 +1,31 @@
+BEGIN;
+
+
+CREATE TABLE IF NOT EXISTS public.transactions
+(
+    transaction_no integer NOT NULL,
+    amount_expense double precision,
+    category character varying(255) COLLATE pg_catalog."default",
+    date timestamp without time zone,
+    description character varying(255) COLLATE pg_catalog."default",
+    user_id integer,
+    CONSTRAINT transactions_pkey PRIMARY KEY (transaction_no)
+);
+
+CREATE TABLE IF NOT EXISTS public.users
+(
+    user_id integer NOT NULL,
+    email character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    full_name character varying(255) COLLATE pg_catalog."default",
+    password character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    username character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT users_pkey PRIMARY KEY (user_id)
+);
+
+ALTER TABLE IF EXISTS public.transactions
+    ADD CONSTRAINT fkqwv7rmvc8va8rep7piikrojds FOREIGN KEY (user_id)
+    REFERENCES public.users (user_id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+END;

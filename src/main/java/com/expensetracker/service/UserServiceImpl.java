@@ -1,26 +1,27 @@
 package com.expensetracker.service;
 
-import com.expensetracker.DTO.UserTransactionDto;
+import com.expensetracker.entity.TransactionEnt;
 import com.expensetracker.entity.UserEnt;
+import com.expensetracker.repository.TransactionsRepo;
 import com.expensetracker.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+;
 
 @Service @RequiredArgsConstructor @Slf4j @Transactional
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepo userRepo;
-
+    private final TransactionsRepo transactionRepo;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -38,22 +39,30 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserTransactionDto getTransactionsByUser(int user_id) {
+    public TransactionEnt getTransactionsByUser(String username) {
 
-        UserEnt user = userRepo.findById(user_id).orElseThrow(IllegalAccessError::new);
+        try {
+            UserEnt userEnt = userRepo.getByUsername(username);
+            if (userEnt == null) {
+                throw new IllegalArgumentException("Username does not exist!");
 
-        ModelMapper modelMapper = new ModelMapper();
+            } else {
+                var transactions = new TransactionEnt();
+                transactions.setCategory(transactions.getCategory());
+                transactions.setAmount_expense(transactions.getAmount_expense());
+                transactions.setDate(transactions.getDate());
+                transactions.setDescription(transactions.getDescription());
+                transactions.setTransaction_no(transactions.getTransaction_no());
 
-        // convert entity to DTO
-        UserTransactionDto userResponse = modelMapper.map(user, UserTransactionDto.class);
-        userResponse.setCategory(userResponse.getCategory());
-        userResponse.setTransaction_no(userResponse.getTransaction_no());
-        userResponse.setDescription(userResponse.getDescription());
-        userResponse.setAmount_expense(userResponse.getAmount_expense());
-        userResponse.setDate(userResponse.getDate());
+                return transactions;
+            }
 
-        return userResponse;
+            }catch(IllegalArgumentException e){
+            new IllegalArgumentException("Something went wrong in new transaction");
+        }
+        return getTransactionsByUser(username);
     }
+
 
 
     @Override

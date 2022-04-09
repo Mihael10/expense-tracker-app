@@ -2,9 +2,11 @@ package com.expensetracker.controllers;
 
 
 
-import com.expensetracker.DTO.UserTransactionDto;
+
+import com.expensetracker.entity.TransactionEnt;
 import com.expensetracker.entity.UserEnt;
 
+import com.expensetracker.repository.TransactionsRepo;
 import com.expensetracker.repository.UserRepo;
 import com.expensetracker.service.UserService;
 
@@ -13,10 +15,12 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.MapBindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.sql.ResultSet;
 import java.util.*;
 
 
@@ -25,7 +29,7 @@ import java.util.*;
 @RequestMapping("/")
 public class UserController {
 
-
+    private final TransactionsRepo transactionRepository;
     private final UserRepo userRepo;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
@@ -73,12 +77,10 @@ public class UserController {
         return response;
     }
 
-    @GetMapping("/{username}transaction")
-    @ResponseBody
-    public List<UserTransactionDto> getAllUserTransactions(@PathVariable(value = "username")int  user_id,String username){
-        UserEnt findUser = userRepo.findById(user_id).get();
-        var userTransaction = userService.getTransactionsByUser(Integer.parseInt(username));
-        return (List<UserTransactionDto>) userTransaction;
+    @GetMapping("/{username}/transaction")
+    public TransactionEnt getUserTransactions(@PathVariable(value = "username")String username){
+
+        return  userService.getTransactionsByUser(username);
     }
 
 }
